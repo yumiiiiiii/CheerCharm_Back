@@ -17,8 +17,25 @@ from django.contrib import admin
 from django.urls import path, include
 from django.urls import re_path as url
 
+from accounts.views import *
+from cheers.views import *
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('rest-auth/', include('rest_auth.urls')),
-    url('^rest-auth/registration/', include('rest_auth.registration.urls')),
+    url('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('', include('django.contrib.auth.urls')),
+
+    #파일 다운로드
+    path('cheers/download/<int:image_id>/',
+         FileDownloadView.as_view(), name="download"),
+
+    # 소셜 로그인
+    # path('accounts/kakao/login/', kakaoSignInView.as_view(), name='kakao_login'),
+    # path('accounts/kakao/login/callback/', kakaoSignInCallBackView.as_view(), name='kakao_callback'),
+    # path('accounts/profile/', KakaoSignInCallbackView.as_view(), name='kakao_login_callback'),
+    # path('accounts/kakao/login/todjango', KakaoToDjangoLogin.as_view(), name='kakao_todjango_login'),
+
+
 ]

@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-a(jvj-a!-)zr=hfwa&(os#8mw7kl=+5ewplbi&q=6cns1911w+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True #이게 True로 되어 있으면 카카오 로그인 오류가 뜬다.
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #DEBUG가 False면 여기도 적절히 변경
 
 
 # Application definition
@@ -42,13 +42,18 @@ INSTALLED_APPS = [
     'cheers',
     'charms',
 
+    #django-rest-auth, django-allauth
     'rest_framework.authtoken',
     'rest_auth',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'rest_auth.registration',
+
+    # provider
+    'allauth.socialaccount.providers.kakao',
+
 ]
 
 MIDDLEWARE = [
@@ -143,6 +148,7 @@ REST_USE_JWT = True
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = False  #이메일 필드 x
 ACCOUNT_UNIQUE_EMAIL = False
+ACCOUNT_UNIQUE_USERNAME= True
 ACCOUNT_USERNAME_REQUIRED = True  #username 필드(아이디) ㅇ
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'none' #이메일 인증x
@@ -150,7 +156,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' #이메일 인증x
 # ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/?verification=1'
 # ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
 
-# SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 REST_AUTH_SERIALIZERS = {
@@ -162,3 +167,20 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 }
 
 ACCOUNT_ADAPTER = 'accounts.adapter.CustomAccountAdapter'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+# LOGIN_REDIRECT_URL = False
+# ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+# LOGIN_REDIRECT_URL = "http://localhost:8000/accounts/kakao/login/callback/"
+# ACCOUNT_AUTHENTICATED_LOGOUT_REDIRECTS = True
+# ACCOUNT_LOGOUT_REDIRECT_URL = "/"
